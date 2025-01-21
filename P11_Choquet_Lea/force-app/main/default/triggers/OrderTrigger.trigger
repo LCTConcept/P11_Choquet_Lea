@@ -1,26 +1,22 @@
-trigger OrderTrigger on Order (after insert, before update, before delete) {
+trigger OrderTrigger on Order (after insert, before update, after delete) {
     
-    // after insert : cocher case active dans account à l'insert d'orders
+     // RG-01 : En tant qu’utilisateur, je veux que l’application vérifie la commande contient des bien produits avant de passer son statut en “Activated” 
+    
+    if (Trigger.isBefore && Trigger.isUpdate) {
+        OrderHelper.OrderStatusUpdatePrecheck(Trigger.new);
+    }
+    
+    // RG-02-A : En tant qu’utilisateur, je veux que la case “Active” se coche automatique si le compte ne possédait pas déjà des commandes et/ou que la case est décochée. 
     
     if (Trigger.isAfter && Trigger.isInsert) {
-        OrderHelper.updateAccountActiveStatus(Trigger.new);
+        OrderHelper.updateAccountActiveStatusAfterInsert(Trigger.new);
     }
     
     
+    // RG-02-B: En tant qu’utilisateur, je veux que l’application décoche automatiquement la case “Active” d’un compte si sa dernière commande est supprimée.  
     
-    // B4 update : vérif si orders a des orders product avant de modif le statut en Activated
-    /* 
-* if (Trigger.isBefore && Trigger.isUpdate) {
-OrderHelper.METHODE(Trigger.new);
-}
-*/
-    
-    
-    // B4 delete : décocher case active dans account à la suppr de dernière order 
-    /* 
-* if (Trigger.isBefore && Trigger.isDelete) {
-OrderHelper.METHODE(Trigger.new);
-}
-*/
-    
+    if (Trigger.isAfter && Trigger.isDelete) {
+        OrderHelper.updateAccountActiveStatusAfterDelete(Trigger.old);
+    }
+       
 }
