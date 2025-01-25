@@ -70,11 +70,7 @@ public class OrderHelper {
         
         // Étape 4 : Effectuer la mise à jour
         if (!accountsToUpdate.isEmpty()) {
-            try {
                 update accountsToUpdate;
-            } catch (DmlException e) {
-                System.debug('Erreur lors de la mise à jour des comptes : ' + e.getMessage());
-            }
         }
     }
     
@@ -120,12 +116,8 @@ public class OrderHelper {
         }
         
         // Étape 4 : Étape 4 : Effectuer la mise à jour
-        if (!accountsToUpdate.isEmpty()) {
-            try {
+        if (!accountsToUpdate.isEmpty()) {  
                 update accountsToUpdate;
-            } catch (DmlException e) {
-                System.debug('Erreur lors de la mise à jour des comptes : ' + e.getMessage());
-            }
         }
         
     }       
