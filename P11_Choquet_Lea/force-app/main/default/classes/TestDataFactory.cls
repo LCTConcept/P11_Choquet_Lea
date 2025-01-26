@@ -132,22 +132,7 @@ public class TestDataFactory {
         return task;
     }
     
-    // Créer une liste de tâches pour plusieurs comptes
-    public static List<Task> createTasks(List<Account> accounts, Boolean doInsert) {
-        List<Task> tasks = new List<Task>();
-        
-        for (Account acc : accounts) {
-            tasks.add(createTask(acc, false)); // Crée une tâche pour chaque compte
-        }
-        
-        if (doInsert && !tasks.isEmpty()) {
-            insert tasks; // Insère les tâches si doInsert est vrai
-        }
-        
-        return tasks;
-    }
-    
-    
+ 
     
     
 }

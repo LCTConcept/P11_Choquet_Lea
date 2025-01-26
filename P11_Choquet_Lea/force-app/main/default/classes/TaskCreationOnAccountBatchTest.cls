@@ -14,9 +14,8 @@ public class TaskCreationOnAccountBatchTest {
         // Créer un compte sans commandes et la case "Active" décochée
         Account accountNotActive = TestDataFactory.createAccount('Compte non actif', false, true);
         
-        //Créer 200 comptes avec des tâches associées 
-        List<Account> accountsWithTasks = TestDataFactory.createAccounts(200, true, true);
-        List<Task> tasks = TestDataFactory.createTasks(accountsWithTasks, true);
+        //Créer 150 comptes inactifs sans tâches associées
+        List<Account> accountsWithTasks = TestDataFactory.createAccounts(150, false, true);
         
     }
     
@@ -109,17 +108,19 @@ public class TaskCreationOnAccountBatchTest {
     //Execution du batch sur un compte actif avec une tâche de rappel déjà existante
     
     @isTest
-    static void taskCreationOnAccountWithTaskFail(){
+    static void taskCreationOnAccountWithTasksFail(){
         
         
-        //ETANT DONNE un compte non-actif avec avec au moins une tâche de rappel 
+        //ETANT DONNE un compte non-actif avec avec 5 tâches de rappel 
         
         Account accountNotActive = [SELECT Id, Name, Active__c 
                                     FROM Account 
                                     WHERE Name = 'Compte non actif' 
                                     LIMIT 1];
         
-        Task task = TestDataFactory.createTask(accountNotActive, true);
+        for (Integer i = 0; i < 5; i++) {
+            Task task = TestDataFactory.createTask(accountNotActive, true); 
+        }
         
         Integer taskCount = [SELECT COUNT() 
                              FROM Task 
@@ -146,8 +147,85 @@ public class TaskCreationOnAccountBatchTest {
         System.assertEquals(taskCount,updatedTaskCount,' Le nombre de tâches ne doit pas avoir changé après exécution du batch');
         
         
+    }
+
+    //Test RG-03-TEST-04 : 
+    //Execution du batch scheduler   
+  
+    @isTest
+    static void batchTimerExecutionSuccess() {
+        
+        // ETANT DONNE un compte non actif sans de tâches de rappel 
+        Account inactiveAccount = [SELECT Id, Name, Active__c 
+                                   FROM Account 
+                                   WHERE Name = 'Compte non actif' 
+                                   LIMIT 1];
+        
+        Integer taskCount = [SELECT COUNT() 
+                             FROM Task 
+                             WHERE WhatId = :inactiveAccount.Id];
+        
+        System.debug('Nom du compte :' + inactiveAccount.Name + ' - Compte actif :' + inactiveAccount.Active__c);
+        System.debug('Nombre de tâches associées au compte :' + taskCount);
+        
+        CronTrigger[] scheduledJobBefore = [SELECT Id, CronExpression, NextFireTime FROM CronTrigger];
+        System.debug('Nombre de batch prévus avant la planification : ' + scheduledJobBefore.size());
+        
+        // LORSQUE le batch est planifié via TaskBatchTimer
+        Test.startTest();
+        TaskBatchTimer.TaskCreationBatchTimer(); 
+        Test.stopTest();
+        
+        // ALORS le batch est bien pris en compte dans la liste des batch à exécuter
+        CronTrigger[] scheduledJobAfter = [SELECT Id, CronExpression, NextFireTime FROM CronTrigger];
+        System.debug('Nombre de batch prévus après la planification: ' + scheduledJobAfter.size());
+        
+        // RESULTAT: il devrait y avoir 1 job de plus après l'appel de TaskCreationBatchTimer
+        System.assertEquals(scheduledJobBefore.size() + 1, scheduledJobAfter.size(), 'Il devrait y avoir 1 batch prévu supplémentaire après la planification.');
         
     }
     
     
+    //Test RG-03-TEST-05 : 
+    // Création de tâches pour 200 comptes éligibles suite à l’exécution du batch 
+    
+    @isTest
+    static void taskCreationOnMultipleAccountsSuccess(){
+        
+        //ETANT DONNE 200 comptes non actifs sans de tâches de rappel
+        
+        List<Account> accountsToUpdate = [SELECT Id, Name, Active__c 
+                                          FROM Account 
+                                          WHERE Name LIKE 'Test Account%' 
+                                          AND Active__c = false 
+                                          LIMIT 150];
+        
+        Integer taskCountBefore = [SELECT COUNT() 
+                                   FROM Task 
+                                   WHERE WhatId IN :accountsToUpdate];
+        
+        System.debug('Nombre de comptes :' + accountsToUpdate.size() );
+        System.debug('Nombre de tâches associées aux comptes avant le batch:' + taskCountBefore);
+        
+        //LORSQUE le batch s’exécute
+        
+        Test.startTest();
+        TaskCreationOnAccountBatch batch = new TaskCreationOnAccountBatch();
+        Database.executeBatch(batch,200);
+        Test.stopTest();
+        
+        //ALORS une tâche s'est créée pour chaque compte
+        
+        List<Account> accountsUpdated  = [SELECT Id, Name, Active__c 
+                                          FROM Account 
+                                          WHERE Name  LIKE 'Test Account%' 
+                                          LIMIT 150];
+        Integer updatedTaskCount = [SELECT COUNT() FROM Task  WHERE WhatId = :accountsUpdated];
+        
+        System.debug('Nombre de tâches associées aux comptes après le batch:' + updatedTaskCount);
+        
+        // RESULTAT : Le batch s'est exécuté correctement et une tâche s'est créée pour chaque compte
+        System.assertEquals(150,updatedTaskCount,' Il doit y avoir 150 tâches en tout : une pour chaque compte');
+        
+    }   
 }
