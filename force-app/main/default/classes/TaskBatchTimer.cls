@@ -5,7 +5,7 @@ public class TaskBatchTimer {
     //Partie C : Timer du batch TaskCreationOnAccountBatch
     
     
-    public static void TaskCreationBatchTimer(){
+    public static void taskCreationBatchTimer(){
         String cronExpression = '0 0 7 ? * 1#1 *'; // Premier lundi de chaque mois à 7h
         System.schedule('Création des taches sur les comptes non actifs', cronExpression, new TaskBatchScheduler());
         

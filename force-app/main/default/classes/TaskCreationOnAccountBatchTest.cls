@@ -24,7 +24,7 @@ public class TaskCreationOnAccountBatchTest {
     // Création de tâches pour les comptes éligibles suite à l’exécution du batch 
     
     @isTest
-    static void taskCreationOnApprovedAccountSuccess(){
+    static void taskCreationOnApprovedAccountSuccessTest(){
         
         //ETANT DONNE un compte non actif sans de tâches de rappel
         
@@ -69,7 +69,7 @@ public class TaskCreationOnAccountBatchTest {
     // Execution du batch sur un compte actif  
     
     @isTest
-    static void taskCreationOnActiveAccountFail(){
+    static void taskCreationOnActiveAccountFailTest(){
         
         //ETANT DONNE un compte actif et qui n'a pas de tâches associées
         
@@ -108,7 +108,7 @@ public class TaskCreationOnAccountBatchTest {
     //Execution du batch sur un compte actif avec une tâche de rappel déjà existante
     
     @isTest
-    static void taskCreationOnAccountWithTasksFail(){
+    static void taskCreationOnAccountWithTasksFailTest(){
         
         
         //ETANT DONNE un compte non-actif avec avec 5 tâches de rappel 
@@ -148,12 +148,13 @@ public class TaskCreationOnAccountBatchTest {
         
         
     }
-
+    
     //Test RG-03-TEST-04 : 
     //Execution du batch scheduler   
-  
+    
+    
     @isTest
-    static void batchTimerExecutionSuccess() {
+    static void batchTimerExecutionSuccessTest() {
         
         // ETANT DONNE un compte non actif sans de tâches de rappel 
         Account inactiveAccount = [SELECT Id, Name, Active__c 
@@ -173,7 +174,7 @@ public class TaskCreationOnAccountBatchTest {
         
         // LORSQUE le batch est planifié via TaskBatchTimer
         Test.startTest();
-        TaskBatchTimer.TaskCreationBatchTimer(); 
+        TaskBatchTimer.taskCreationBatchTimer(); 
         Test.stopTest();
         
         // ALORS le batch est bien pris en compte dans la liste des batch à exécuter
@@ -187,12 +188,12 @@ public class TaskCreationOnAccountBatchTest {
     
     
     //Test RG-03-TEST-05 : 
-    // Création de tâches pour 200 comptes éligibles suite à l’exécution du batch 
+    // Création de tâches pour 150 comptes éligibles suite à l’exécution du batch 
     
     @isTest
-    static void taskCreationOnMultipleAccountsSuccess(){
+    static void taskCreationOnMultipleAccountsSuccessTest(){
         
-        //ETANT DONNE 200 comptes non actifs sans de tâches de rappel
+        //ETANT DONNE 150 comptes non actifs sans de tâches de rappel
         
         List<Account> accountsToUpdate = [SELECT Id, Name, Active__c 
                                           FROM Account 
@@ -227,5 +228,7 @@ public class TaskCreationOnAccountBatchTest {
         // RESULTAT : Le batch s'est exécuté correctement et une tâche s'est créée pour chaque compte
         System.assertEquals(150,updatedTaskCount,' Il doit y avoir 150 tâches en tout : une pour chaque compte');
         
-    }   
+    }
+    
+    
 }

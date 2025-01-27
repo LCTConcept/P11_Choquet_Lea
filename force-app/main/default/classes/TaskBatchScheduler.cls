@@ -9,5 +9,4 @@ global class TaskBatchScheduler implements Schedulable {
         
         Database.executeBatch(new TaskCreationOnAccountBatch(), 200);
     }
-    
 }

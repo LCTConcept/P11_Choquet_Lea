@@ -4,7 +4,7 @@ public class OrderHelper {
     //User story RG-01 : 
     //L’application vérifie que la commande contient bien des produits avant de passer son statut en “Activated”.
     
-    public static void OrderStatusUpdatePrecheck(List<Order> draftOrders){
+    public static void orderStatusUpdatePrecheck(List<Order> draftOrders){
         
         //Etape 1 : Récupérer les commandes 
         Set<Id> ordersIds = new Set<Id>();

@@ -29,7 +29,7 @@ public class OrderHelperTest {
     // Le statut de la commande passe en “Activated” car elle contient des produits
     
     @isTest 
-    static void OrderStatusChangeToActivatedSuccessTest(){
+    static void orderStatusChangeToActivatedSuccessTest(){
         
         //ETANT DONNE qu'une commande contient des produits
         
@@ -52,7 +52,7 @@ public class OrderHelperTest {
         update testOrder ;
         
         Test.startTest();
-        OrderHelper.OrderStatusUpdatePrecheck(new List<Order>{testOrder});
+        OrderHelper.orderStatusUpdatePrecheck(new List<Order>{testOrder});
         Test.stopTest();
         
         // ALORS le statut est modifié.  
@@ -71,7 +71,7 @@ public class OrderHelperTest {
     // Le statut de la commande ne passe PAS en “Activated” car elle ne contient pas de produits
     
     @isTest 
-    static void OrderStatusChangeToActivatedFailTest(){
+    static void orderStatusChangeToActivatedFailTest(){
         
         //ETANT DONNE qu'une commande ne contient PAS de produits
         
@@ -96,7 +96,7 @@ public class OrderHelperTest {
         
         
         Test.startTest();
-        OrderHelper.OrderStatusUpdatePrecheck(new List<Order>{emptyOrder});
+        OrderHelper.orderStatusUpdatePrecheck(new List<Order>{emptyOrder});
         Test.stopTest();
         
         // ALORS le statut reste en Draft.   
@@ -117,7 +117,7 @@ public class OrderHelperTest {
     // Activation de la case "Active" lors de l’ajout d’une commande sur un compte sans orders.
     
     @isTest 
-    static void ActiveCaseCheckedAfterOrderInsertTest() {
+    static void activeCaseCheckedAfterOrderInsertTest() {
         // ETANT DONNE qu'un compte a la case "Active" décochée et ne possède pas de commandes existantes.
         Account accountWithoutOrders = [SELECT Id, Name, Active__c 
                                         FROM Account 
@@ -150,7 +150,7 @@ public class OrderHelperTest {
     // Activation de la case "Active" lors de l’ajout d’une commande sur un compte avec des orders dont la case est décochée.
     
     @isTest 
-    static void ActiveCaseRectifiedAfterOrderInsertTest() {
+    static void activeCaseRectifiedAfterOrderInsertTest() {
         
         // ETANT DONNE qu'un compte a la case "Active" décochée malgré des commandes associées. 
         Account accountWithOrders = [SELECT Id, Name, Active__c 
@@ -188,7 +188,7 @@ public class OrderHelperTest {
     // Pas de changement de la case "Active" lors de l’ajout d’une commande sur un compte avec des orders dont la case est cochée.
     
     @isTest 
-    static void CheckedActiveCaseUnchangedAfterOrderInsertTest() {
+    static void checkedActiveCaseUnchangedAfterOrderInsertTest() {
         
         // ETANT DONNE qu'un compte a la case "Active" cochée et des commandes associées
         Account accountWithOrders = [SELECT Id, Name, Active__c 
@@ -223,7 +223,7 @@ public class OrderHelperTest {
     // Test RG-02-A-TEST-04 : 
     // Activation de la case "Active" lors de l’ajout d’une commande au statut 'Activated' sur un compte sans orders.
     @isTest 
-    static void ActiveCaseCheckedAfterActivatedOrderInsertTest() {
+    static void activeCaseCheckedAfterActivatedOrderInsertTest() {
         
         // ETANT DONNE qu'un compte a la case "Active" décochée et ne possède pas de commandes existantes.
         Account accountWithoutOrders = [SELECT Id, Name, Active__c 
@@ -271,7 +271,7 @@ public class OrderHelperTest {
     // La mise à jour de la case ne fonctionne pas en raison d’une erreur 
     
     @isTest
-    static void UpdateAccountFailsTest(){
+    static void updateAccountFailsTest(){
         
         // ETANT DONNE qu'un compte a la case "Active" décochée et ne possède pas de commandes existantes.
         Account accountWithoutOrders = [SELECT Id, Name, Active__c 
@@ -317,7 +317,7 @@ public class OrderHelperTest {
     
     @isTest 
     
-    static void ActiveCaseUncheckedAfterLastOrderDeletedTest() {
+    static void activeCaseUncheckedAfterLastOrderDeletedTest() {
         // ETANT DONNE qu'un compte a la case "Active" cochée et possède des commandes existantes.
         Account accountWithOrders = [SELECT Id, Name, Active__c 
                                      FROM Account 
@@ -362,7 +362,7 @@ public class OrderHelperTest {
     
     @isTest 
     
-    static void CheckedActiveCaseUnchangedAfterOrderDeletedTest() {
+    static void checkedActiveCaseUnchangedAfterOrderDeletedTest() {
         // ETANT DONNE qu’un compte est déjà actif et qu’il a au moins deux  commandes
         Account accountWithOrders = [SELECT Id, Name, Active__c 
                                      FROM Account 
@@ -400,5 +400,5 @@ public class OrderHelperTest {
         
         // Résultat : La case "Active" doit être encore cochée après la suppression d'une commande et qu'il en reste d'autres associées.
         System.assertEquals(true, updatedAccount.Active__c, 'La case Active__c doit être cochée après la suppression d\'une commande associée tant qu\'il y en a d\'autres.');
-    }
+    } 
 }
