@@ -12,7 +12,7 @@
   - Batch programmé tous les 1er lundi du mois pour créer des tâches de rappel sur les comptes inactifs sans tâches
 
 
-  ## Méthodologies utilisées 🔥  
+  ## Méthodologies utilisées 
   - Bonnes pratiques Salesforce 
   - Trigger 
   - Batch & Batch Schedule 
@@ -20,6 +20,6 @@
   - Test Driven Development (TDD)
   - Do not Repeat Yourself (DRY)
       
-  ## Créateur ✨  
+  ## Créateur 
   **Léa CHOQUET** - Etudiante sur la formation "Developpeur application Salesforce" de Openclassrooms.com 
   
